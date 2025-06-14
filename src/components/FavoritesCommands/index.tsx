@@ -31,14 +31,16 @@ export default function QuickCommands({ quickCommands, setQuickCommands, setInst
             <h2>Favorites</h2>
             <div className="flex flex-wrap gap-x-1 gap-y-1">
                 {[... new Set(quickCommands)].map((x, index) =>
-                    <button key={index} onClick={() => addInstruction(x)} className="flex flex-row items-center gap-x-4 pr-1!">
+                    <div className="flex flex-row">
+                        <button key={index} onClick={() => addInstruction(x)}>
                         <div className="">
                             {x.identifier}({
                                 Object.entries(x).map(([k, v], index) => k !== "identifier" && <span key={index}>{k}={v as string}{index !== Object.entries(x).length - 1 && ", "}</span>)
                             })
                         </div>
-                        <button onClick={() => removeInstruction(x)} className="">X</button>
                     </button>
+                    <button onClick={() => removeInstruction(x)} className="">X</button>
+                    </div>
                 )}
             </div>
         </>
