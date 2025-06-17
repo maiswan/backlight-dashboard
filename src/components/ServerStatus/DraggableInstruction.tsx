@@ -1,22 +1,9 @@
-import type { Instruction, InstructionTemplate } from "../../instructions/instructionSchema";
+import { type Instruction, type InstructionTemplate } from "../../instructions/instructionSchema";
 import InstructionEditor from "./InstructionEditor";
-import { useCallback, useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-
-// don't show the UUID (too long) and already-shown properties in frontend
-function replacer(instruction: Instruction) {
-    return Object
-        .entries(instruction)
-        .filter(([k,]) => k !== "id")
-        .filter(([k,]) => k !== "identifier")
-        .filter(([k,]) => k !== "targets")
-        .filter(([k,]) => k !== "z_index")
-        .filter(([k,]) => k !== "is_enabled")
-        .map(([k, v]) => `${k}=${v}`)
-        .join(", ");
-}
-
+import { useInstructionsContext } from "../../InstructionsContext";
 
 type DraggableInstructionProps = {
     instruction: Instruction;
@@ -24,12 +11,11 @@ type DraggableInstructionProps = {
     maxIndex: number;
     moveInstruction: (from: number, to: number) => void;
     deleteInstruction: (instruction: Instruction) => void;
-    toggleInstruction: (instruction: Instruction) => void;
     setInstruction: (instruction: Instruction) => void;
-
-    quickCommands: InstructionTemplate[];
-    setQuickCommands: Dispatch<SetStateAction<InstructionTemplate[]>>;
 };
+
+const INSTRUCTION_MIN_KEY_COUNT = 5;
+// [identifier, id, z_index, is_enabled, targets].length
 
 const instructionTotemplate = (instruction: Instruction): InstructionTemplate => {
     const output = JSON.parse(JSON.stringify(instruction));
@@ -40,13 +26,18 @@ const instructionTotemplate = (instruction: Instruction): InstructionTemplate =>
     return output;
 }
 
+// for each template, check whether all properties' string values match with target
 const contains = (templates: InstructionTemplate[], target: InstructionTemplate) => {
-    const targetJson = JSON.stringify(target);
-    return templates.some(x => JSON.stringify(x) === targetJson);
+    return templates.some(template => {
+        const keys = Object.keys(template);
+        return keys.every(key => 
+            String(template[key]) === String(target[key])
+        );
+    });
 }
 
 // https://zenn.dev/wintyo/articles/d39841c63cc9c9
-export default function DraggableInstruction({ instruction, index, maxIndex, moveInstruction, deleteInstruction, toggleInstruction, setInstruction, quickCommands, setQuickCommands }: DraggableInstructionProps) {
+export default function DraggableInstruction({ instruction, index, maxIndex, moveInstruction, deleteInstruction, setInstruction }: DraggableInstructionProps) {
 
     const {
         isDragging,
@@ -58,27 +49,46 @@ export default function DraggableInstruction({ instruction, index, maxIndex, mov
         transition
     } = useSortable({ id: instruction.id });
 
+    const { quickCommands, setQuickCommands } = useInstructionsContext();
     const [isEditorExpanded, setIsEditorVisible] = useState(false);
-    const [isFavorite, setisFavorite] = useState(false);
+    
+    // don't show the UUID (too long) and already-shown properties in frontend
+    const summary = useMemo(() => {
+        const identifier = instruction.identifier;
+        const parameters = Object
+            .entries(instruction)
+            .filter(([k,]) => k !== "id")
+            .filter(([k,]) => k !== "identifier")
+            .filter(([k,]) => k !== "targets")
+            .filter(([k,]) => k !== "z_index")
+            .filter(([k,]) => k !== "is_enabled")
+            .map(([k, v]) => `${k}=${v}`)
+            .join(", ");
+        return `${identifier}(${parameters})`;
+    }, [instruction]);
 
-    useEffect(() => {
+    const isFavorite = useMemo(() => {
         const template = instructionTotemplate(instruction);
-        setisFavorite(contains(quickCommands, template));
-    }, [quickCommands, instruction]);
+        return contains(quickCommands, template);
+    }, [instruction, quickCommands]);
 
-    const toggleFavorites = useCallback((instruction: Instruction) => {
+    const toggleInstruction = useCallback(() => {
+        const newInstruction = {...instruction, is_enabled: !instruction.is_enabled};
+        setInstruction(newInstruction);
+    }, [instruction, setInstruction]);
+
+    const toggleFavorites = useCallback(() => {
         const template = instructionTotemplate(instruction);
-        setisFavorite(prev => !prev);
 
-        if (!isFavorite) {
-            setQuickCommands(prev => [...prev, template]);
+        if (isFavorite) {
+            const templateJson = JSON.stringify(template);
+            setQuickCommands(prev => prev.filter(x => JSON.stringify(x) !== templateJson));
             return;
         }
+        
+        setQuickCommands(prev => [...prev, template]);
 
-        const templateJson = JSON.stringify(template);
-        setQuickCommands(prev => prev.filter(x => JSON.stringify(x) !== templateJson));
-
-    }, [isFavorite, setQuickCommands])
+    }, [instruction, isFavorite, setQuickCommands])
 
     return (
         <div ref={setNodeRef}
@@ -92,10 +102,10 @@ export default function DraggableInstruction({ instruction, index, maxIndex, mov
                     {...attributes} {...listeners}
                 >&#8942;&#8942;</div>
                 <div className={`${isEditorExpanded ? "rotate-180" : "rotate-90"} transition-transform duration-200 mx-0`}>&#9650;</div>
-                <div className="flex-1 font-mono">{instruction.identifier}({replacer(instruction)})</div>
+                <div className="flex-1 font-mono">{summary}</div>
                 <div className="flex flex-row gap-1" onClick={(e) => e.stopPropagation()}>
-                    <button className={`min-w-24 ${isFavorite && "bg-fuchsia-200/20 border-fuchsia-200!"}`} onClick={() => toggleFavorites(instruction)}>Favorite</button>
-                    <button className={`min-w-24 ${instruction.is_enabled && "bg-fuchsia-200/20 border-fuchsia-200!"}`} onClick={() => toggleInstruction(instruction)}>{instruction.is_enabled ? "Enabled" : "Disabled"}</button>
+                    <button className={`min-w-24 ${isFavorite && "bg-fuchsia-200/20 border-fuchsia-200!"}`} disabled={Object.keys(instruction).length <= INSTRUCTION_MIN_KEY_COUNT} onClick={toggleFavorites}>Favorite</button>
+                    <button className={`min-w-24 ${instruction.is_enabled && "bg-fuchsia-200/20 border-fuchsia-200!"}`} onClick={toggleInstruction}>{instruction.is_enabled ? "Enabled" : "Disabled"}</button>
 
                     {/* swap disabled and indicies property rule since flex-col-reverse */}
                     <button onClick={() => moveInstruction(index, index + 1)} disabled={index === maxIndex}>&uarr;</button>

@@ -2,48 +2,52 @@ import { useEffect, useState } from "react";
 import type { Field, Instruction } from "../../instructions/instructionSchema";
 import instructionSchema from '../../instructions/instructionSchema.json';
 
-export default function InstructionEditor({ instruction, setInstruction }: { instruction: Instruction, setInstruction: (v: Instruction) => void }) {
+interface InstructionEditorProps {
+    instruction: Instruction;
+    setInstruction: (v: Instruction) => void
+}
 
-    const [instructionType, setInstructionType] = useState<keyof typeof instructionSchema>();
+export default function InstructionEditor({ instruction, setInstruction }: InstructionEditorProps) {
+
     const [fields, setFields] = useState<Field[]>([]);
     const [data, setData] = useState<Record<string, unknown>>({});
-
-    const changeInstructionType = (instructionType: keyof typeof instructionSchema) => {
-        setInstructionType(instructionType);
-        const fields: Field[] = Object.prototype.hasOwnProperty.call(instructionSchema, instructionType)
-            ? instructionSchema[instructionType] as Field[]
-            : []
-        setFields(fields);
-        setData({})
-    }
-
+    
     // Initialize
     useEffect(() => {
-        changeInstructionType(instruction.identifier as keyof typeof instructionSchema);
+        const identifier = instruction.identifier as keyof typeof instructionSchema
+        setFields(instructionSchema[identifier] as Field[]);
         setData(instruction);
     }, []);
 
-    // Write back to instruction
+    // Writeback
     useEffect(() => {
         setInstruction({
             ...data,
-            identifier: instructionType as keyof typeof instructionSchema,
+            identifier: instruction.identifier,
             id: instruction.id,
             z_index: instruction.z_index,
             is_enabled: instruction.is_enabled,
             targets: instruction.targets
         });
-    }, [data, instructionType]);
+    }, [data]);
+
+    const changeInstructionType = (instructionType: keyof typeof instructionSchema) => {
+        setFields(instructionSchema[instructionType] as Field[]);
+        setData({});
+        setInstruction(({
+            identifier: instructionType as keyof typeof instructionSchema,
+            id: instruction.id,
+            z_index: instruction.z_index,
+            is_enabled: instruction.is_enabled,
+            targets: instruction.targets
+        }));
+    }
 
     return (
         <div className="flex flex-col space-y-2">
-            {/* <div className="flex flex-row items-center">
-                <div className="basis-1/8">ID</div>
-                <div className="basis-1/3 font-mono">{instruction.id}</div>
-            </div> */}
             <div className="flex flex-row items-center mb-4">
                 <div className="basis-1/8">Instruction</div>
-                <select className="basis-1/3" value={instructionType} onChange={(e) => changeInstructionType(e.target.value as keyof typeof instructionSchema)}>
+                <select className="basis-1/3" value={instruction.identifier} onChange={(e) => changeInstructionType(e.target.value as keyof typeof instructionSchema)}>
                     {
                         Object.keys(instructionSchema).map(x => <option key={x}>{x}</option>)
                     }
@@ -61,8 +65,5 @@ export default function InstructionEditor({ instruction, setInstruction }: { ins
                     </div>
                 )
             }
-        </div>
-
-
-    )
+        </div>    )
 }

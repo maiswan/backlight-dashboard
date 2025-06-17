@@ -1,32 +1,16 @@
-import type { Instruction, InstructionTemplate as InstructionTemplate } from "../../instructions/instructionSchema";
 import kelvin2rgb from "./kelvin2rgb";
-import { v4 as uuidv4 } from "uuid";
-import { useCallback, useState, type Dispatch, type SetStateAction } from "react";
+import { useState } from "react";
+import { useInstructionsContext } from "../../InstructionsContext";
 
-interface QuickCommandsProps {
-    setInstructions: Dispatch<SetStateAction<Instruction[]>>;
-}
+export default function QuickCommands() {
 
-export default function QuickCommands({ setInstructions }: QuickCommandsProps) {
-
+    const { addInstructionFromTemplate } = useInstructionsContext();
     const [isExpanded, setIsExpanded] = useState(false);
-
-    const addInstructionFromTemplate = useCallback((template: InstructionTemplate) => {
-        const instruction: Instruction = {
-            id: uuidv4(),
-            z_index: 0,
-            is_enabled: true,
-            targets: null,
-            ...template
-        }
-
-        setInstructions(prev => [...prev, instruction]);
-    }, [setInstructions]);
 
     return (
         <>
             <div className="flex flex-row gap-2 pb-2 mb-0 items-center" onClick={() => setIsExpanded(prev => !prev)}>
-                <div className={`${isExpanded ? "rotate-180" : "rotate-90"} transition-transform duration-200`}>&#9650;</div>
+                <div data-testid="expander" className={`${isExpanded ? "rotate-180" : "rotate-90"} transition-transform duration-200`}>&#9650;</div>
                 <h2 className="mb-0!">Quick Commands</h2>
             </div>
             <div className={`flex flex-wrap gap-1 expandable ${isExpanded ? 'expanded' : ''}`}>
@@ -82,7 +66,7 @@ export default function QuickCommands({ setInstructions }: QuickCommandsProps) {
 
                 <div className="basis-full">Gamma &gamma;</div>
                 {
-                    [1, 1.8, 2.2, 2.4, 2.6, 2.8].map(x => <button key={x} className="basis-16/100 flex flex-row items-center gap-x-2"
+                    [1.1, 1.8, 2.2, 2.4, 2.6, 2.8].map(x => <button key={x} className="basis-16/100 flex flex-row items-center gap-x-2"
                         onClick={() => addInstructionFromTemplate({ identifier: "gamma_static", gamma: x })}>
                         <div className="bg-white h-[1rem] w-[1rem] rounded-full" style={{ opacity: 1 - (x - 1) / 2.8 }} />
                         <div className="">{x.toFixed(1)}</div>

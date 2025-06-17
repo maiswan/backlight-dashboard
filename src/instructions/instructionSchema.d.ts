@@ -18,6 +18,8 @@ export interface Instruction {
     [key: string]: unknown
 }
 
+
+
 // A InstructionTemplate represents the key elements of an instruction:
 // - type
 // - instruction-specific data
