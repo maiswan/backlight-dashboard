@@ -4,7 +4,8 @@
             "name": "gamma",
             "type": "float",
             "min": 0.1,
-            "max": 5.0
+            "max": 5.0,
+            "step": 0.1
         }
     ],
     "alpha_static": [
@@ -12,56 +13,81 @@
             "name": "alpha",
             "type": "float",
             "min": 0.0,
-            "max": 1.0
+            "max": 1.0,
+            "step": 0.1
         }
     ],
     "alpha_pulse": [
         {
             "name": "period_ms",
             "type": "int",
-            "min": 1000
+            "min": 1000,
+            "step": 100
         },
         {
             "name": "alpha_min",
             "type": "float",
             "min": 0.0,
-            "max": 1.0
+            "max": 1.0,
+            "step": 0.1
         },
         {
             "name": "alpha_max",
             "type": "float",
             "min": 0.0,
-            "max": 1.0
+            "max": 1.0,
+            "step": 0.1
         }
     ],
     "alpha_rolling": [
         {
             "name": "period_ms",
             "type": "int",
-            "min": 1000
+            "min": 1000,
+            "step": 100
         },
         {
             "name": "maximas",
             "type": "float",
-            "min": 0.01
+            "min": 0.01,
+            "step": 0.1
         },
         {
             "name": "alpha_min",
             "type": "float",
             "min": 0.0,
-            "max": 1.0
+            "max": 1.0,
+            "step": 0.1
         },
         {
             "name": "alpha_max",
             "type": "float",
             "min": 0.0,
-            "max": 1.0
+            "max": 1.0,
+            "step": 0.1
         }
     ],
     "color_static_rgb": [
         {
-            "name": "color",
-            "type": "color"
+            "name": "red",
+            "type": "int",
+            "min": 0,
+            "max": 255,
+            "step": 1
+        },
+        {
+            "name": "green",
+            "type": "int",
+            "min": 0,
+            "max": 255,
+            "step": 1
+        },
+        {
+            "name": "blue",
+            "type": "int",
+            "min": 0,
+            "max": 255,
+            "step": 1
         }
     ],
     "color_static_hsv": [
@@ -69,19 +95,22 @@
             "name": "hue",
             "type": "int",
             "min": 0,
-            "max": 360
+            "max": 360,
+            "step": 1
         },
         {
             "name": "saturation",
             "type": "float",
             "min": 0,
-            "max": 1
+            "max": 1,
+            "step": 0.1
         },
         {
             "name": "value",
             "type": "float",
             "min": 0,
-            "max": 1
+            "max": 1,
+            "step": 0.1
         }
     ],
     "color_static_kelvin": [
@@ -89,31 +118,52 @@
             "name": "kelvin",
             "type": "int",
             "min": 1000,
-            "max": 12000
+            "max": 12000,
+            "step": 100
         }
     ],
     "color_rainbow": [
         {
             "name": "period_ms",
             "type": "int",
-            "min": 1000
+            "min": 1000,
+            "step": 100
         },
         {
             "name": "saturation",
             "type": "float",
             "min": 0.0,
-            "max": 1.0
+            "max": 1.0,
+            "step": 0.1
         }
     ],
     "color_fade": [
         {
             "name": "period_ms",
             "type": "float",
-            "min": 1000
+            "min": 1000,
+            "step": 100
         },
         {
-            "name": "color",
-            "type": "color"
+            "name": "red",
+            "type": "int",
+            "min": 0,
+            "max": 255,
+            "step": 1
+        },
+        {
+            "name": "green",
+            "type": "int",
+            "min": 0,
+            "max": 255,
+            "step": 1
+        },
+        {
+            "name": "blue",
+            "type": "int",
+            "min": 0,
+            "max": 255,
+            "step": 1
         }
     ]
 }

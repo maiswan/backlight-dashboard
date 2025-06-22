@@ -10,10 +10,10 @@ export default function QuickCommands() {
     return (
         <>
             <div className="flex flex-row gap-2 pb-2 mb-0 items-center" onClick={() => setIsExpanded(prev => !prev)}>
-                <div data-testid="expander" className={`${isExpanded ? "rotate-180" : "rotate-90"} transition-transform duration-200`}>&#9650;</div>
+                <div data-testid="expanderIcon" className={`${isExpanded ? "rotate-180" : "rotate-90"} transition-transform duration-200`}>&#9650;</div>
                 <h2 className="mb-0!">Quick Commands</h2>
             </div>
-            <div className={`flex flex-wrap gap-1 expandable ${isExpanded ? 'expanded' : ''}`}>
+            <div data-testid="expander" className={`flex flex-wrap gap-1 expandable ${isExpanded ? 'expanded' : ''}`}>
                 <button className="basis-24/100 flex flex-row items-center gap-x-2"
                     onClick={() => addInstructionFromTemplate({ identifier: "color_static_rgb", red: 255, green: 255, blue: 255 })}>
                     <div className="bg-white h-[1rem] w-[1rem] rounded-full" />

@@ -1,10 +1,12 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import type { Config } from "../config";
 import type { Instruction } from "../instructions/instructionSchema";
 
-export default function useSseEndpoint(server: string, setInstructions: (i: Instruction[]) => void, setLastPing: (d: Date) => void) {
-    
+export default function useSseEndpoint(server: string) {
+
+    const [lastPing, setLastPing] = useState<Date | null>(null);
+    const [instructions, setInstructions] = useState<Instruction[]>([]);
     const hasOfflineToast = useRef(false); // avoid spamming "server offline"
     
     useEffect(() => {
@@ -26,5 +28,7 @@ export default function useSseEndpoint(server: string, setInstructions: (i: Inst
             toast.error("Server offline.");
         }
         return () => source.close();
-    }, [server, setInstructions, setLastPing]);
+    }, [server]);
+
+    return { instructions, lastPing }
 }

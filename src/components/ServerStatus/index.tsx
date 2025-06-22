@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import useHttpEndpoint from "../../hooks/useHttpEndpoint";
 import { v4 as uuidv4 } from "uuid";
 import { useInstructionsContext } from "../../InstructionsContext";
@@ -8,10 +8,13 @@ import InstructionList from "./InstructionList";
 export default function ServerStatus({ server }: { server: string }) {
 
     const { instructions, setInstructions } = useInstructionsContext();
-    const [lastPing, setLastPing] = useState<Date | null>(null);
     const { postResetInstruction } = useHttpEndpoint(server);
 
-    useSseEndpoint(server, setInstructions, setLastPing);
+    const { instructions: serverInstructions, lastPing } = useSseEndpoint(server);
+
+    useEffect(() => {
+        setInstructions(serverInstructions);
+    }, [serverInstructions]);
 
     const newInstruction = () => {
         setInstructions(prev => [...prev, {

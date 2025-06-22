@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 import type { Instruction, InstructionTemplate } from "./instructions/instructionSchema";
 
-type InstructionsContextType = {
+export type InstructionsContextType = {
     instructions: Instruction[];
     setInstructions: React.Dispatch<React.SetStateAction<Instruction[]>>;
     quickCommands: InstructionTemplate[];

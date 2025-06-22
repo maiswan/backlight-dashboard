@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import type { Field, Instruction } from "../../instructions/instructionSchema";
 import instructionSchema from '../../instructions/instructionSchema.json';
 
@@ -11,7 +11,7 @@ export default function InstructionEditor({ instruction, setInstruction }: Instr
 
     const [fields, setFields] = useState<Field[]>([]);
     const [data, setData] = useState<Record<string, unknown>>({});
-    
+
     // Initialize
     useEffect(() => {
         const identifier = instruction.identifier as keyof typeof instructionSchema
@@ -44,26 +44,47 @@ export default function InstructionEditor({ instruction, setInstruction }: Instr
     }
 
     return (
-        <div className="flex flex-col space-y-2">
-            <div className="flex flex-row items-center mb-4">
-                <div className="basis-1/8">Instruction</div>
-                <select className="basis-1/3" value={instruction.identifier} onChange={(e) => changeInstructionType(e.target.value as keyof typeof instructionSchema)}>
-                    {
-                        Object.keys(instructionSchema).map(x => <option key={x}>{x}</option>)
-                    }
-                </select>
-            </div>
+        <div className="grid grid-cols-[6rem_18rem_auto] gap-4">
+            {/* Instruction type */}
+            <div>Instruction</div>
+            <select className="basis-1/3" value={instruction.identifier} onChange={(e) => changeInstructionType(e.target.value as keyof typeof instructionSchema)}>
+                {
+                    Object.keys(instructionSchema).map(x => <option key={x}>{x}</option>)
+                }
+            </select>
+            <div></div>
+            {/* Fields */}
             {
                 fields.map(x =>
-                    <div key={x.name} className="flex flex-row items-center">
-                        <div className="basis-1/8 font-mono">{x.name}</div>
-                        {
-                            x.type === "color"
-                                ? <input type="color" className="basis-1/3 h-10" value={data[x.name] as string} onChange={e => setData(prev => ({ ...prev, [x.name]: e.target.value }))} />
-                                : <input type="number" className="basis-1/3" min={x.min} max={x.max} value={data[x.name] as number} onChange={e => setData(prev => ({ ...prev, [x.name]: e.target.value }))} />
-                        }
-                    </div>
+                    <Fragment key={x.name}>
+                        <div className="font-mono">{x.name}</div>
+                        <input className="font-mono" type="number" min={x.min} max={x.max} step={x.step} value={data[x.name] as number} onChange={e => setData(prev => ({ ...prev, [x.name]: e.target.value }))} />
+                        <div className="font-mono">{x.min == null ? "(-∞" : `[${x.min}`}, {x.max == null ? "∞)" : `${x.max}]`}</div>
+                    </Fragment>
                 )
             }
-        </div>    )
+
+        </div>
+
+        // <div className="flex flex-col space-y-2">
+        //     <div className="flex flex-row items-center mb-4 gap-4">
+        //         <div>Instruction</div>
+        //         <select className="basis-1/3" value={instruction.identifier} onChange={(e) => changeInstructionType(e.target.value as keyof typeof instructionSchema)}>
+        //             {
+        //                 Object.keys(instructionSchema).map(x => <option key={x}>{x}</option>)
+        //             }
+        //         </select>
+        //         <div>Range</div>
+        //     </div>
+        //     {
+        //         fields.map(x =>
+        //             <div key={x.name} className="flex flex-row items-center gap-4 font-mono">
+        //                 <div>{x.name}</div>
+        //                 <input type="number" className="basis-1/3" min={x.min} max={x.max} step={x.step} value={data[x.name] as number} onChange={e => setData(prev => ({ ...prev, [x.name]: e.target.value }))} />
+        //                 <div>{x.min == null ? "(-∞" : `[${x.min}`}, {x.max == null ? "∞)" : `${x.max}]`}</div>
+        //             </div>
+        //         )
+        //     }
+        // </div>
+    );
 }

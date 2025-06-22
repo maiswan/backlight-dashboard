@@ -101,7 +101,7 @@ export default function DraggableInstruction({ instruction, index, maxIndex, mov
                     className={`mdi mdi-drag ${isDragging ? "cursor-grabbing" : "cursor-pointer"} self-stretch content-center p-4`}
                     {...attributes} {...listeners}
                 >&#8942;&#8942;</div>
-                <div className={`${isEditorExpanded ? "rotate-180" : "rotate-90"} transition-transform duration-200 mx-0`}>&#9650;</div>
+                <div data-testid="expanderIcon" className={`${isEditorExpanded ? "rotate-180" : "rotate-90"} transition-transform duration-200 mx-0`}>&#9650;</div>
                 <div className="flex-1 font-mono">{summary}</div>
                 <div className="flex flex-row gap-1" onClick={(e) => e.stopPropagation()}>
                     <button className={`min-w-24 ${isFavorite && "bg-fuchsia-200/20 border-fuchsia-200!"}`} disabled={Object.keys(instruction).length <= INSTRUCTION_MIN_KEY_COUNT} onClick={toggleFavorites}>Favorite</button>
@@ -114,7 +114,7 @@ export default function DraggableInstruction({ instruction, index, maxIndex, mov
                 </div>
             </div>
 
-            <div className={`expandable ${isEditorExpanded ? 'expanded' : ''}`}>
+            <div data-testid="expander" className={`expandable ${isEditorExpanded ? 'expanded' : ''}`}>
                 <div className="ml-16 my-4">
                     <InstructionEditor instruction={instruction} setInstruction={setInstruction} />
                 </div>
