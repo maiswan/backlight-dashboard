@@ -3,6 +3,8 @@ import toast from "react-hot-toast";
 import type { Config } from "../config";
 import type { Instruction } from "../instructions/instructionSchema";
 
+const STREAM_CONFIG_PATH = "api/v1/config/stream";
+
 export default function useSseEndpoint(server: string) {
 
     const [lastPing, setLastPing] = useState<Date | null>(null);
@@ -11,7 +13,7 @@ export default function useSseEndpoint(server: string) {
     
     useEffect(() => {
         setInstructions([]);
-        const source = new EventSource(`${server}/state?stream=true`);
+        const source = new EventSource(`${server}/${STREAM_CONFIG_PATH}`);
         source.onmessage = (e) => {
             try {
                 const config: Config = JSON.parse(e.data);

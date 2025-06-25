@@ -8,7 +8,7 @@ import InstructionList from "./InstructionList";
 export default function ServerStatus({ server }: { server: string }) {
 
     const { instructions, setInstructions } = useInstructionsContext();
-    const { postResetInstruction } = useHttpEndpoint(server);
+    const { putInstructions } = useHttpEndpoint(server);
 
     const { instructions: serverInstructions, lastPing } = useSseEndpoint(server);
 
@@ -26,9 +26,9 @@ export default function ServerStatus({ server }: { server: string }) {
         }]);
     }
 
-    const postInstructions = useCallback(async () => {
-        await postResetInstruction(instructions);
-    }, [instructions, postResetInstruction]);
+    const applyInstructions = useCallback(async () => {
+        await putInstructions(instructions);
+    }, [instructions, putInstructions]);
 
     return (
         <>
@@ -36,7 +36,7 @@ export default function ServerStatus({ server }: { server: string }) {
             <p className="mb-4">Last updated {lastPing?.toISOString()}</p>
             <InstructionList/>
             <div className="flex flex-row gap-1 [&>button]:min-w-48 justify-end">
-                <button onClick={postInstructions}>Apply</button>
+                <button onClick={applyInstructions}>Apply</button>
                 <button onClick={newInstruction}>Add instruction</button>
             </div>
         </>
