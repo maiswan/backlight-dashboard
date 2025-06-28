@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig, type UserConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import tailwindcss from '@tailwindcss/vite'
 
@@ -21,14 +21,19 @@ const noAttr = () => {
     }
 }
 
+const test = { 
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: './vitest-setup.ts'
+} as UserConfig
 
 // https://vite.dev/config/
 export default defineConfig(({ command }) => {
     if (command === 'serve') {
         // dev
-        return { plugins: [react(), tailwindcss()] };
+        return { plugins: [react(), tailwindcss()], test };
     } 
     
     // build
-    return { plugins: [react(), tailwindcss(), noAttr()] };
+    return { plugins: [react(), tailwindcss(), noAttr()], test };
 })

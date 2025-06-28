@@ -4,9 +4,10 @@ export type InstructionRoot = {
 
 export interface Field {
     name: string
-    type: "int" | "float" | "color"
+    type: "int" | "float"
     min?: number
     max?: number
+    step?: number
 }
 
 export interface Instruction {

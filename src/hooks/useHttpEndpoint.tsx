@@ -2,9 +2,7 @@ import toast from "react-hot-toast";
 import type { Instruction } from "../instructions/instructionSchema";
 
 const UNPROCESSABLE_ENTITY = 422;
-const NOT_FOUND = 404;
-const INSTRUCTION_PATH = "instructions";
-const INSTRUCTION_RESET_PATH = "instructions/reset";
+const INSTRUCTION_PATH = "api/v1/instructions";
 
 type FastApiErrorWrapper = {
     detail: FastApiError[]
@@ -26,7 +24,7 @@ const fastApiErrorToString = (json: FastApiError): string => {
 
 export default function useHttpEndpoint(server: string) {
 
-    const postResetInstruction = async (instructions: Instruction[]) => {
+    const putInstructions = async (instructions: Instruction[]) => {
 
         const ordered = instructions.map((x, index) => ({
             ...x,
@@ -34,8 +32,8 @@ export default function useHttpEndpoint(server: string) {
         }));
 
         try {
-            const response = await fetch(`${server}/${INSTRUCTION_RESET_PATH}`, {
-                method: "POST",
+            const response = await fetch(`${server}/${INSTRUCTION_PATH}`, {
+                method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(ordered)
             })
@@ -65,32 +63,5 @@ export default function useHttpEndpoint(server: string) {
         }
     }
 
-    const deleteInstruction = async (instruction: Instruction) => {
-        try {
-            const response = await fetch(`${server}/${INSTRUCTION_PATH}/${instruction.id}`, {
-                method: "DELETE",
-            })
-
-            if (response.ok) {
-                toast.success("Instruction deleted");
-                return;
-            }
-
-            if (response.status === NOT_FOUND) {
-                toast.error("Instruction not found");
-                return;
-            }
-
-            // There has been an unknown error
-            const json: FastApiErrorWrapper = await response.json();
-            const errors = json?.detail.map(fastApiErrorToString);
-            errors?.forEach(x => toast.error(x));
-
-        } catch (error) {
-            toast.error("Network error");
-            console.error(error);
-        }
-    }
-
-    return { postResetInstruction, deleteInstruction }
+    return { putInstructions };
 }
