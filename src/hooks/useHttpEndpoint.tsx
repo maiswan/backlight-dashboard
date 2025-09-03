@@ -1,8 +1,8 @@
 import toast from "react-hot-toast";
-import type { Instruction } from "../instructions/instructionSchema";
+import type { Command } from "../types/command";
 
 const UNPROCESSABLE_ENTITY = 422;
-const INSTRUCTION_PATH = "api/v1/instructions";
+const COMMAND_PATH = "api/v2/commands";
 
 type FastApiErrorWrapper = {
     detail: FastApiError[]
@@ -24,22 +24,22 @@ const fastApiErrorToString = (json: FastApiError): string => {
 
 export default function useHttpEndpoint(server: string) {
 
-    const putInstructions = async (instructions: Instruction[]) => {
+    const putCommands = async (commands: Command[]) => {
 
-        const ordered = instructions.map((x, index) => ({
+        const ordered = commands.map((x, index) => ({
             ...x,
             z_index: index * 10 // reset z-index based on UI display order
         }));
 
         try {
-            const response = await fetch(`${server}/${INSTRUCTION_PATH}`, {
+            const response = await fetch(`${server}/${COMMAND_PATH}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(ordered)
             })
 
             if (response.ok) {
-                toast.success("Instructions applied");
+                toast.success("Commands applied");
                 return;
             }
 
@@ -63,5 +63,5 @@ export default function useHttpEndpoint(server: string) {
         }
     }
 
-    return { putInstructions };
+    return { putCommands };
 }

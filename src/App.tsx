@@ -1,56 +1,36 @@
-import { useCallback, useEffect, useState } from 'react';
-import { ServerInput, ServerStatus, QuickCommands, FavoritesCommand } from './components'
+import { useCallback } from 'react';
 import './App.css'
 import { Toaster } from 'react-hot-toast';
-import type { Instruction, InstructionTemplate } from './instructions/instructionSchema';
-import { InstructionsContext } from './InstructionsContext';
-import { v4 as uuidv4 } from 'uuid';
+import { useDashboardContext } from './hooks/useCommandContext';
+import ServerInput from './components/ServerInput';
+import type { Command } from './types/command';
+import useSseEndpoint from './hooks/useSseEndpoint';
+import QuickCommands from './components/QuickCommands/QuickCommands';
+import CommandList from './components/CommandList/CommandList';
+import Favorites from './components/Favorites';
 
-function App() {
-    
-    const [server, setServer] = useState(localStorage.getItem("server") ?? "");
-    const [quickCommands, setQuickCommands] = useState<InstructionTemplate[]>(
-        JSON.parse(localStorage.getItem("quickCommands") ?? "[]")
-    );
-    const [instructions, setInstructions] = useState<Instruction[]>([]);
+export default function App() {
+    const { server, setCommands } = useDashboardContext();
 
-    // localStorage writebacks
-    useEffect(() => {
-        localStorage.setItem("server", server);
-    }, [server]);
+    const handleServerCommandChange = useCallback((commands: Command[]) => {
+        setCommands(commands);
+    }, [setCommands]);
 
-    useEffect(() => {
-        localStorage.setItem("quickCommands", JSON.stringify(quickCommands))
-    }, [quickCommands])
-
-    
-    const addInstructionFromTemplate = useCallback((template: InstructionTemplate) => {
-        const instruction: Instruction = {
-            id: uuidv4(),
-            z_index: 0,
-            is_enabled: true,
-            targets: null,
-            ...template
-        }
-
-        setInstructions(prev => [...prev, instruction]);
-    }, [setInstructions]);
+    useSseEndpoint(server, handleServerCommandChange);
 
     return (
-        <div className="space-y-8 max-w-5xl mx-auto px-4">
-            <div><Toaster /></div>
-            <h1>Backlight Dashboard</h1>
+        <div className="max-w-5xl mx-auto p-4 space-y-4">
+            <header>
+                <div><Toaster /></div>
+                <h1>maiswan/backlight</h1>
+            </header>
 
-            <ServerInput server={server} setServer={setServer} />
-            <InstructionsContext.Provider value={{ instructions, setInstructions, quickCommands, setQuickCommands, addInstructionFromTemplate }}>
-                <QuickCommands/>
-                <FavoritesCommand/>
-                <ServerStatus server={server}/>
-
-            </InstructionsContext.Provider>
-
+            <main className="flex flex-col gap-y-1">
+                <ServerInput />
+                <QuickCommands />
+                <Favorites />
+                <CommandList />
+            </main>
         </div>
     )
 }
-
-export default App

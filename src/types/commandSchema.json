@@ -19,7 +19,7 @@
     ],
     "alpha_pulse": [
         {
-            "name": "period_ms",
+            "name": "period",
             "type": "int",
             "min": 1000,
             "step": 100
@@ -41,7 +41,7 @@
     ],
     "alpha_rolling": [
         {
-            "name": "period_ms",
+            "name": "period",
             "type": "int",
             "min": 1000,
             "step": 100
@@ -124,7 +124,7 @@
     ],
     "color_rainbow": [
         {
-            "name": "period_ms",
+            "name": "period",
             "type": "int",
             "min": 1000,
             "step": 100
@@ -139,7 +139,7 @@
     ],
     "color_fade": [
         {
-            "name": "period_ms",
+            "name": "period",
             "type": "float",
             "min": 1000,
             "step": 100
