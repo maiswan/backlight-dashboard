@@ -1,36 +1,46 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useEffect } from "react";
 import toast from "react-hot-toast";
-import type { Config } from "../config";
-import type { Instruction } from "../instructions/instructionSchema";
+import type { Command } from "../types/command";
+import type { SseData } from "../types/SseData";
 
-const STREAM_CONFIG_PATH = "api/v1/config/stream";
 
-export default function useSseEndpoint(server: string) {
+const STREAM_CONFIG_PATH = "api/v2/config/stream";
 
-    const [lastPing, setLastPing] = useState<Date | null>(null);
-    const [instructions, setInstructions] = useState<Instruction[]>([]);
+export default function useSseEndpoint(
+    server: string,
+    callback: (commands: Command[]) => void)
+{
+
     const hasOfflineToast = useRef(false); // avoid spamming "server offline"
+    const currentServer = useRef("");
     
     useEffect(() => {
-        setInstructions([]);
+        if (currentServer.current) { return; }
+        currentServer.current = server;
+
+        callback([]);
+        if (!server) { return; }
+
         const source = new EventSource(`${server}/${STREAM_CONFIG_PATH}`);
         source.onmessage = (e) => {
             try {
-                const config: Config = JSON.parse(e.data);
-                setInstructions(config.instructions);
-                setLastPing(new Date());
+                const config: SseData = JSON.parse(e.data);
+                callback(config.commands)
             } catch {
-                toast.error("Failed to parse server response");
+                toast.error("Unknown error");
             }
         };
         source.onopen = () => toast.success("Connected to server.");
         source.onerror = () => {
             if (hasOfflineToast.current) { return; }
             hasOfflineToast.current = true;
+            currentServer.current = "";
             toast.error("Server offline.");
         }
-        return () => source.close();
-    }, [server]);
+        return () => {
+            source.close();
+            currentServer.current = "";
+        }
+    }, [callback, server]);
 
-    return { instructions, lastPing }
 }
