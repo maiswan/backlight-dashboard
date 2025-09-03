@@ -3,61 +3,62 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+    scrollbar-gutter: stable both-edges;
+}
+
 body {
-    @apply bg-neutral-900 m-4 text-white
+    @apply bg-neutral-900 m-4 text-stone-50;
 }
 
 h1 {
-    @apply text-xl font-bold mb-2
+    @apply text-2xl font-bold;
 }
 
 h2 {
-    @apply font-semibold mb-2
+    @apply font-semibold;
 }
 
-hr {
-    @apply border-neutral-500 my-4
+h3 {
+    @apply font-semibold text-sm mb-2;
+}
+
+p {
+    @apply mb-4;
+}
+
+.button-base {
+    @apply px-2 py-1 border-1 rounded-sm bg-stone-800/10 border-stone-400/70;
 }
 
 button {
-    @apply px-4 py-1 border-1 rounded-sm border-neutral-400 hover:bg-fuchsia-200/20 hover:border-fuchsia-200 disabled:bg-gray-200/20 disabled:text-gray-300 transition-colors duration-200
+    @apply cursor-pointer px-2 py-1 max-w-48 border-1 rounded-sm border-stone-400/70 hover:bg-fuchsia-200/40 hover:border-fuchsia-200 disabled:bg-gray-200/20 disabled:text-gray-300 transition-colors duration-200;
 }
 
-.instruction {
-    @apply border-neutral-500 border-1 rounded-sm border-neutral-400 hover:border-fuchsia-200 transition-colors duration-200 bg-neutral-800 
-}
-
-input {
-    @apply border-b-1 border-neutral-400 font-mono
-}
-
-table {
-    @apply table-auto
-}
-
-thead {
-    @apply bg-fuchsia-200/20
-}
-
-tr {
-    @apply border-1 border-neutral-500
-}
-
-th, td {
-    @apply text-left px-2 py-1
-}
-
-select {
-    @apply border-1 border-neutral-500 rounded-sm bg-gray-900 px-2 py-1
+button.active {
+    @apply bg-fuchsia-300/20 border-fuchsia-300;
 }
 
 .expandable {
-    overflow: hidden;
-    max-height: 0;
-    transition: max-height 0.2s ease-in-out;
+    @apply bg-stone-800/10 border-1 border-stone-500;
 }
 
-.expandable.expanded {
-    max-height: 500px;
-    /* Set to a value larger than your content's height */
+input {
+    @apply border-1 border-stone-400/70 px-2 py-1 font-mono rounded-sm w-full hover:border-stone-400 hover:bg-stone-50/5 transition-colors duration-200;
+}
+
+option {
+    @apply bg-gray-800;
+}
+
+select {
+    @apply border-1 border-stone-400/70 hover:border-stone-400 hover:bg-stone-50/5 transition-colors duration-200 rounded-sm px-2 py-1 w-full;
+}
+
+.secondary {
+    @apply opacity-70 text-sm tracking-wide;
+}
+
+.ReactCollapse--collapse {
+    @apply transition-[height] duration-200 ease-in-out;
 }
