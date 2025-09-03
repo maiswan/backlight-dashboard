@@ -28,7 +28,7 @@ export const DashbaordProvider = ({ children }: { children: ReactNode }) => {
 
     const [commands, setCommands] = useState<Command[]>([]);
     const [favoriteCommands, setFavoriteCommands] = useState<CommandTemplate[]>(JSON.parse(localStorage.getItem("favoriteCommands") ?? "[]"));
-    const [server, setServer] = useState<string>(localStorage.getItem("server") ?? "");
+    const [server, setServer] = useState<string>(localStorage.getItem("server") || window.location.origin);
 
     const addCommandFromTemplate = useCallback((template: CommandTemplate, name?: string) => {
         setCommands(prev => {
