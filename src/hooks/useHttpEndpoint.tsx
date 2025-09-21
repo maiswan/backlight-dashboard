@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 import type { Command } from "../types/command";
 
 const UNPROCESSABLE_ENTITY = 422;
-const COMMAND_PATH = "api/v2/commands";
+const COMMAND_PATH = "api/v3/commands";
 
 type FastApiErrorWrapper = {
     detail: FastApiError[]

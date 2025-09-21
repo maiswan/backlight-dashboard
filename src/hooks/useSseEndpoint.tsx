@@ -4,7 +4,7 @@ import type { Command } from "../types/command";
 import type { SseData } from "../types/SseData";
 
 
-const STREAM_CONFIG_PATH = "api/v2/config/stream";
+const STREAM_CONFIG_PATH = "api/v3/config/stream";
 
 export default function useSseEndpoint(
     server: string,
