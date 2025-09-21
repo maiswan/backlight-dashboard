@@ -1,5 +1,111 @@
 {
-    "gamma_static": [
+    "correction_static_ccm": [
+        {
+            "name": "m11",
+            "type": "float",
+            "min": -1.0,
+            "max": 1.0,
+            "step": 0.1
+        },
+        {
+            "name": "m12",
+            "type": "float",
+            "min": -1.0,
+            "max": 1.0,
+            "step": 0.1
+        },
+        {
+            "name": "m13",
+            "type": "float",
+            "min": -1.0,
+            "max": 1.0,
+            "step": 0.1
+        },
+        {
+            "name": "m21",
+            "type": "float",
+            "min": -1.0,
+            "max": 1.0,
+            "step": 0.1
+        },
+        {
+            "name": "m22",
+            "type": "float",
+            "min": -1.0,
+            "max": 1.0,
+            "step": 0.1
+        },
+        {
+            "name": "m23",
+            "type": "float",
+            "min": -1.0,
+            "max": 1.0,
+            "step": 0.1
+        },
+        {
+            "name": "m31",
+            "type": "float",
+            "min": -1.0,
+            "max": 1.0,
+            "step": 0.1
+        },
+        {
+            "name": "m32",
+            "type": "float",
+            "min": -1.0,
+            "max": 1.0,
+            "step": 0.1
+        },
+        {
+            "name": "m33",
+            "type": "float",
+            "min": -1.0,
+            "max": 1.0,
+            "step": 0.1
+        },
+        {
+            "name": "bias_red",
+            "type": "float",
+            "min": -255.0,
+            "max": 255.0,
+            "step": 0.1
+        },
+        {
+            "name": "bias_green",
+            "type": "float",
+            "min": -255.0,
+            "max": 255.0,
+            "step": 0.1
+        },
+        {
+            "name": "bias_blue",
+            "type": "float",
+            "min": -255.0,
+            "max": 255.0,
+            "step": 0.1
+        }
+    ],
+    "correction_static_dithering": [
+        {
+            "name": "min_red",
+            "type": "int",
+            "min": 0,
+            "step": 1
+        },
+        {
+            "name": "min_green",
+            "type": "int",
+            "min": 0,
+            "step": 1
+        },
+        {
+            "name": "min_blue",
+            "type": "int",
+            "min": 0,
+            "step": 1
+        }
+    ],
+    "correction_static_gamma": [
         {
             "name": "gamma",
             "type": "float",

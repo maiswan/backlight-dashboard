@@ -6,7 +6,7 @@ import CommandButton from "./CommandButton";
 export const RGB_COMMAND: CommandMode = "color_static_rgb";
 export const KELVIN_COMMAND: CommandMode = "color_static_kelvin";
 export const ALPHA_COMMAND: CommandMode = "alpha_static";
-export const GAMMA_COMMAND: CommandMode = "gamma_static";
+export const GAMMA_COMMAND: CommandMode = "correction_static_gamma";
 
 function QuickCommands() {
     return (

@@ -142,10 +142,10 @@ export default function CommandEntry({ command, isTop, isBottom, index, moveComm
                             <input value={targets} onChange={(e) => setTargets(e.target.value)} />
                         </div>
 
-                        <div className="flex flex-row overflow-auto gap-2 mt-4">
+                        <div className="flex flex-wrap gap-1 mt-4">
                             {
                                 CommandSchema[mode].map(x =>
-                                    <div key={x.name} className="flex-1">
+                                    <div key={x.name} className="flex-1 text-nowrap">
                                         <div className="secondary">{x.name}</div>
                                         <input type="number" value={parameters[x.name] as number}
                                             min={x.min} max={x.max} step={x.step}
