@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, type ChangeEvent, type MouseEvent } from "react";
-import { CommandModes, CommandSchema, type Command, type CommandMode, type CommandTemplate } from "../../types/command";
+import { BlendModes, CommandModes, CommandSchema, type BlendMode, type Command, type CommandMode, type CommandTemplate } from "../../types/command";
 import Expandable from "../Expandable";
 import { useDashboardContext } from "../../hooks/useCommandContext";
 
@@ -23,7 +23,7 @@ function getParametersForMode(parameters: Command | Record<string, unknown>, mod
     return output;
 }
 
-const toCommand = (mode: CommandMode, name: string, id: string, isEnabled: boolean, targets: string, parameters: Record<string, unknown>) => {
+const toCommand = (mode: CommandMode, name: string, id: string, isEnabled: boolean, targets: string, alpha: number, blend: BlendMode, parameters: Record<string, unknown>) => {
     return {
         mode,
         name,
@@ -31,13 +31,14 @@ const toCommand = (mode: CommandMode, name: string, id: string, isEnabled: boole
         z_index: -1, // useHttpEndpoint will set this field when sending the // PUT request
         is_enabled: isEnabled,
         targets,
+        alpha,
+        blend,
         ...getParametersForMode(parameters, mode),
     } as Command;
 }
 
 const isCommandEqualToTemplate = (command: Command, template: CommandTemplate) => {
     if (command.mode !== template.mode) return false;
-    if (command.targets !== template.targets) return false;
 
     const keys = CommandSchema[command.mode].map(x => x.name);
     return keys.every(x => command[x] === template[x]);
@@ -51,27 +52,29 @@ export default function CommandEntry({ command, isTop, isBottom, index, moveComm
     const [mode, setMode] = useState(command.mode);
     const [targets, setTargets] = useState(command.targets);
     const [isEnabled, setIsEnabled] = useState(command.is_enabled);
+    const [alpha, setAlpha] = useState(command.alpha);
+    const [blend, setBlend] = useState(command.blend);
 
     // Keep parameters even if they don't apply to this CommandMode,
     // so when the user returns to the original CommandMode, the parameters remain
     const [parameters, setParameters] = useState<Record<string, unknown>>(getParametersForMode(command, command.mode));
 
     const isFavorited = useMemo(() => {
-        const newCommand = toCommand(mode, name, command.id, isEnabled, targets, parameters);
+        const newCommand = toCommand(mode, name, command.id, isEnabled, targets, alpha, blend, parameters);
         return favoriteCommands.some(x => isCommandEqualToTemplate(newCommand, x));
-    }, [command.id, favoriteCommands, isEnabled, mode, name, parameters, targets]);
+    }, [command.id, favoriteCommands, isEnabled, mode, name, parameters, alpha, blend, targets]);
 
     // Writeback
     useEffect(() => {
         const timeout = setTimeout(() => {
-            const newCommand = toCommand(mode, name, command.id, isEnabled, targets, parameters);
+            const newCommand = toCommand(mode, name, command.id, isEnabled, targets, alpha, blend, parameters);
 
             setCommands(prev => prev.map(x => x.id === newCommand.id ? newCommand : x));
         }, 250);
 
         return () => clearTimeout(timeout);
 
-    }, [name, mode, targets, parameters, isEnabled, command.id, setCommands]);
+    }, [name, mode, targets, alpha, blend, parameters, isEnabled, command.id, setCommands]);
 
     const handleIsEnabledClick = useCallback((e: MouseEvent) => {
         e.stopPropagation();
@@ -90,6 +93,10 @@ export default function CommandEntry({ command, isTop, isBottom, index, moveComm
 
     const handleChangeMode = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
         setMode(e.target.value as CommandMode);
+    }, [setMode]);
+
+    const handleChangeBlend = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
+        setBlend(e.target.value as BlendMode);
     }, [setMode]);
 
     const handleSetData = useCallback((key: string, value: string, type: "int" | "float") => {
@@ -141,6 +148,23 @@ export default function CommandEntry({ command, isTop, isBottom, index, moveComm
                             <div className="secondary">Targets</div>
                             <input value={targets} onChange={(e) => setTargets(e.target.value)} />
                         </div>
+
+                        <div>
+                            <div className="secondary">Alpha</div>
+                            <input type="number" value={alpha} min={0} max={1} step={0.1} onChange={(e) => setAlpha(Number.parseFloat(e.target.value))} />
+                        </div>
+
+                        {
+                            command.mode.includes("source") &&
+                            <div>
+                                <div className="secondary">Blend</div>
+                                <select value={blend} onChange={handleChangeBlend}>
+                                    {BlendModes.map(x =>
+                                        <option value={x}>{x}</option>
+                                    )}
+                                </select>
+                            </div>
+                        }
 
                         <div className="flex flex-wrap gap-1 mt-4">
                             {

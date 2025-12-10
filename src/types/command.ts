@@ -1,4 +1,5 @@
 import CommandSchemaJson from "./commandSchema.json";
+import BlendModesJson from "./blendModes.json";
 
 export const CommandSchema = CommandSchemaJson as Record<CommandMode, CommandField[]>; 
 
@@ -13,6 +14,9 @@ export interface CommandField {
 export type CommandMode = keyof typeof CommandSchemaJson;
 export const CommandModes = Object.keys(CommandSchemaJson) as CommandMode[];
 
+export const BlendModes = BlendModesJson as readonly string[];
+export type BlendMode =  typeof BlendModes[number];
+
 export interface Command {
     mode: CommandMode;
     name: string;
@@ -21,6 +25,8 @@ export interface Command {
     is_enabled: boolean;
     targets: string;
     [key: string]: unknown;
+    alpha: number;
+    blend: BlendMode;
 }
 
 // A CommandTemplate represents the key elements of an command:

@@ -38,6 +38,8 @@ export const DashbaordProvider = ({ children }: { children: ReactNode }) => {
                 z_index: 0,
                 is_enabled: true,
                 ...template,
+                alpha: 1,
+                blend: "normal"
             }
             return [command, ...prev];
         })
