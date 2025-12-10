@@ -27,7 +27,7 @@ export default function CommandList() {
 
     const addCommand = useCallback(() => {
         addCommandFromTemplate({
-            mode: "gamma_static",
+            mode: "transform_brightness",
             targets: "",
         });
     }, [addCommandFromTemplate]);

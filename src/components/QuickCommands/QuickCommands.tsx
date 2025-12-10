@@ -3,10 +3,10 @@ import type { CommandMode } from "../../types/command";
 import Expandable from "../Expandable";
 import CommandButton from "./CommandButton";
 
-export const RGB_COMMAND: CommandMode = "color_static_rgb";
-export const KELVIN_COMMAND: CommandMode = "color_static_kelvin";
-export const ALPHA_COMMAND: CommandMode = "alpha_static";
-export const GAMMA_COMMAND: CommandMode = "correction_static_gamma";
+export const RGB_COMMAND: CommandMode = "source_rgb";
+export const KELVIN_COMMAND: CommandMode = "source_kelvin";
+export const BRIGHTNESS_COMMAND: CommandMode = "transform_brightness";
+export const GAMMA_COMMAND: CommandMode = "transform_gamma";
 
 function QuickCommands() {
     return (
@@ -25,13 +25,13 @@ function QuickCommands() {
                 <CommandButton mode={KELVIN_COMMAND} parameters={{ kelvin: 6000 }} color="powderblue" text="6000K"/>
             </div>
 
-            <h3>Alpha</h3>
+            <h3>Brightness</h3>
             <div className="flex flex-row flex-wrap gap-1 mb-4">
-                <CommandButton mode={ALPHA_COMMAND} parameters={{ alpha: 1.00 }} color="#FFFFFFFF" text="100%"/>
-                <CommandButton mode={ALPHA_COMMAND} parameters={{ alpha: 0.75 }} color="#FFFFFFC8" text="75%"/>
-                <CommandButton mode={ALPHA_COMMAND} parameters={{ alpha: 0.50 }} color="#FFFFFF92" text="50%"/>
-                <CommandButton mode={ALPHA_COMMAND} parameters={{ alpha: 0.25 }} color="#FFFFFF5B" text="25%"/>
-                <CommandButton mode={ALPHA_COMMAND} parameters={{ alpha: 0.00 }} color="#FFFFFF24" text="0%"/>
+                <CommandButton mode={BRIGHTNESS_COMMAND} parameters={{ alpha: 1.00 }} color="#FFFFFFFF" text="100%"/>
+                <CommandButton mode={BRIGHTNESS_COMMAND} parameters={{ alpha: 0.75 }} color="#FFFFFFC8" text="75%"/>
+                <CommandButton mode={BRIGHTNESS_COMMAND} parameters={{ alpha: 0.50 }} color="#FFFFFF92" text="50%"/>
+                <CommandButton mode={BRIGHTNESS_COMMAND} parameters={{ alpha: 0.25 }} color="#FFFFFF5B" text="25%"/>
+                <CommandButton mode={BRIGHTNESS_COMMAND} parameters={{ alpha: 0.00 }} color="#FFFFFF24" text="0%"/>
             </div>
 
             <h3>Gamma</h3>
