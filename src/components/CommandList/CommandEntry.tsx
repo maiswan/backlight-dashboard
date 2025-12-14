@@ -144,27 +144,30 @@ export default function CommandEntry({ command, isTop, isBottom, index, moveComm
                             </select>
                         </div>
 
-                        <div>
-                            <div className="secondary">Targets</div>
-                            <input value={targets} onChange={(e) => setTargets(e.target.value)} />
-                        </div>
 
-                        <div>
-                            <div className="secondary">Alpha</div>
-                            <input type="number" value={alpha} min={0} max={1} step={0.1} onChange={(e) => setAlpha(Number.parseFloat(e.target.value))} />
-                        </div>
-
-                        {
-                            command.mode.includes("source") &&
-                            <div>
-                                <div className="secondary">Blend</div>
-                                <select value={blend} onChange={handleChangeBlend}>
-                                    {BlendModes.map(x =>
-                                        <option value={x}>{x}</option>
-                                    )}
-                                </select>
+                        <div className="flex flex-wrap gap-1 gap-y-2">
+                            <div className="basis-3/10 flex-1">
+                                <div className="secondary">Targets</div>
+                                <input value={targets} onChange={(e) => setTargets(e.target.value)} />
                             </div>
-                        }
+
+                            <div className="basis-2/10 flex-1">
+                                <div className="secondary">Alpha</div>
+                                <input type="number" value={alpha} min={0} max={1} step={0.1} onChange={(e) => setAlpha(Number.parseFloat(e.target.value))} />
+                            </div>
+
+                            {
+                                command.mode.includes("source") &&
+                                <div className="basis-3/10 flex-1">
+                                    <div className="secondary">Blend</div>
+                                    <select value={blend} onChange={handleChangeBlend}>
+                                        {BlendModes.map(x =>
+                                            <option value={x}>{x}</option>
+                                        )}
+                                    </select>
+                                </div>
+                            }
+                        </div>
 
                         <div className="flex flex-wrap gap-1 mt-4">
                             {
