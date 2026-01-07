@@ -10,16 +10,10 @@ export default function useSseEndpoint(
     server: string,
     callback: (commands: Command[]) => void)
 {
-
     const hasOfflineToast = useRef(false); // avoid spamming "server offline"
-    const currentServer = useRef("");
-    
+  
     useEffect(() => {
-        if (currentServer.current) { return; }
-        currentServer.current = server;
-
         callback([]);
-        if (!server) { return; }
 
         const source = new EventSource(`${server}/${STREAM_CONFIG_PATH}`);
         source.onmessage = (e) => {
@@ -34,12 +28,10 @@ export default function useSseEndpoint(
         source.onerror = () => {
             if (hasOfflineToast.current) { return; }
             hasOfflineToast.current = true;
-            currentServer.current = "";
             toast.error("Server offline.");
         }
         return () => {
             source.close();
-            currentServer.current = "";
         }
     }, [callback, server]);
 
