@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useDashboardContext } from "../../hooks/useCommandContext";
 import type { CommandMode } from "../../types/command";
-import { ALPHA_COMMAND, GAMMA_COMMAND, KELVIN_COMMAND, RGB_COMMAND } from "./QuickCommands";
+import { BRIGHTNESS_COMMAND, GAMMA_COMMAND, KELVIN_COMMAND, RGB_COMMAND } from "./QuickCommands";
 
 interface CommandButtonProps {
     color: string;
@@ -13,7 +13,7 @@ interface CommandButtonProps {
 function CommandModeToString(commandMode: CommandMode, parameter: string) {
     if (commandMode === RGB_COMMAND) { return parameter; }
     if (commandMode === KELVIN_COMMAND) { return parameter; }
-    if (commandMode === ALPHA_COMMAND) { return `${parameter} alpha`; }
+    if (commandMode === BRIGHTNESS_COMMAND) { return `${parameter} alpha`; }
     if (commandMode === GAMMA_COMMAND) { return `${parameter} gamma`; }
     throw new Error("Invalid command mode");
 }

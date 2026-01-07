@@ -22,7 +22,6 @@ export default function App() {
         <div className="max-w-5xl mx-auto p-4 space-y-4">
             <header>
                 <div><Toaster /></div>
-                <h1>maiswan/backlight</h1>
             </header>
 
             <main className="flex flex-col gap-y-1">
